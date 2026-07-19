@@ -124,6 +124,9 @@
             background: #D9E3F5;
             border-radius: 10px;
         }
+        .thumb-fallback {
+            display: none;
+        }
     </style>
 </head>
 <body class="font-body-md text-body-md overflow-x-hidden custom-scrollbar">
@@ -152,59 +155,82 @@
     // Real project data: title + live URL
     const container = document.getElementById('projects-grid');
     const projects = [
-        { title: "Genesystem", url: "https://www.genesystem.co.kr/" },
-        { title: "SB위드아그로", url: "https://www.sbwithagro.kr/" },
-        { title: "ESMOD SEOUL (에스모드 서울)", url: "https://www.esmod.co.kr/" },
-        { title: "민락체육예약시스템", url: "https://minlak.eticket.or.kr/" },
-        { title: "새미네부엌", url: "https://semie.cooking/" },
-        { title: "전국은행연합회", url: "https://www.kfb.or.kr/member/index_2023.html" },
-        { title: "바른자세 제통의원", url: "http://painless.kr/" },
-        { title: "진단용방사선 안전관리책임자교육", url: "https://radiationsafe.or.kr/" },
-        { title: "라라올라", url: "https://www.lalaola.com/" },
-        { title: "영등포농협 사회공헌실천재단", url: "https://ydpfoundation.com/" },
-        { title: "용각산쿨", url: "https://yonggaksancool.co.kr/" },
-        { title: "세자해 플랫폼 (2026 세계 자원봉사자의 해)", url: "https://ivy2026korea.or.kr/" },
-        { title: "국립암센터 국가암검진 질향상교육", url: "https://neweducation.ncc.re.kr/index.html" },
-        { title: "클리니크 후즈후", url: "http://www.cliniquehushu.com/" },
-        { title: "헬스와이즈", url: "http://healthwise.co.kr/" },
-        { title: "쿠무다 명상문화센터", url: "http://kumuda.co.kr/" },
-        { title: "엘리바바(eleVaVa)", url: "http://elevava.com/" },
-        { title: "경기도립노인전문시흥병원", url: "http://www.gshospital.com/" },
-        { title: "서울아산이비인후과", url: "http://www.seoulasan-ent.com/" },
-        { title: "서남동행 (서울특별시 서남병원 공공의료본부)", url: "https://phs.seoulsnh.or.kr/" },
-        { title: "서울대항유외과의원", url: "http://www.seouldhu.surgery/" },
-        { title: "매듭병원", url: "http://knothospital.com/" },
-        { title: "라팡산부인과의원", url: "http://www.lapin.co.kr/" },
-        { title: "더바름정형외과", url: "https://thebareum.com/" },
-        { title: "검단연세이비인후과의원", url: "http://gdysent.co.kr/" },
-        { title: "서울탑안과의원 (청주)", url: "http://topretina.co.kr/" },
-        { title: "장튼위튼병원", url: "http://www.good-jang.com/" },
-        { title: "충무로필한의원", url: "http://chungmuro-philhospital.com/" },
-        { title: "청주필한방병원", url: "https://www.cheongju-philhospital.com/" },
-        { title: "어니스트여성의원", url: "http://www.honestclinic.com/" },
-        { title: "서울특별시북부지역장애인보건의료센터", url: "http://www.seoulnhc.com/" },
-        { title: "서울재활병원", url: "https://seoulrh.com/" },
-        { title: "이종신재활의학과의원", url: "http://ljshosp.co.kr/" },
-        { title: "삼성봄내과의원", url: "http://samsungbom.com/" },
-        { title: "청주담대항외과의원", url: "http://damdaehang.co.kr/" },
-        { title: "H리버스에이징센터", url: "http://hreverseagingcenter.com/" },
-        { title: "뉴고려병원", url: "https://www.nkhospital.net/" }
+        { title: "Genesystem", url: "https://www.genesystem.co.kr/", slug: "genesystem", participation: 40 },
+        { title: "SB위드아그로", url: "https://www.sbwithagro.kr/", slug: "sbwithagro", participation: 70 },
+        { title: "ESMOD SEOUL (에스모드 서울)", url: "https://www.esmod.co.kr/", slug: "esmod", participation: 50 },
+        { title: "민락체육예약시스템", url: "https://minlak.eticket.or.kr/", slug: "minlak", participation: 60 },
+        { title: "새미네부엌", url: "https://semie.cooking/", slug: "semie", participation: 100 },
+        { title: "전국은행연합회", url: "https://www.kfb.or.kr/member/index_2023.html", slug: "kfb", participation: 100 },
+        { title: "바른자세 제통의원", url: "http://painless.kr/", slug: "painless", participation: 100 },
+        { title: "진단용방사선 안전관리책임자교육", url: "https://radiationsafe.or.kr/", slug: "radiationsafe", participation: 50 },
+        { title: "라라올라", url: "https://www.lalaola.com/", slug: "lalaola", participation: 100 },
+        { title: "영등포농협 사회공헌실천재단", url: "https://ydpfoundation.com/", slug: "ydpfoundation", participation: 33 },
+        { title: "용각산쿨", url: "https://yonggaksancool.co.kr/", slug: "yonggaksancool", participation: 100 },
+        { title: "세자해 플랫폼 (2026 세계 자원봉사자의 해)", url: "https://ivy2026korea.or.kr/", slug: "ivy2026korea", participation: 50 },
+        { title: "국립암센터 국가암검진 질향상교육", url: "https://neweducation.ncc.re.kr/index.html", slug: "neweducation", participation: 100 },
+        { title: "클리니크 후즈후", url: "http://www.cliniquehushu.com/", slug: "cliniquehushu", participation: 100 },
+        { title: "헬스와이즈", url: "http://healthwise.co.kr/", slug: "healthwise", participation: 100 },
+        { title: "쿠무다 명상문화센터", url: "http://kumuda.co.kr/", slug: "kumuda", participation: 100 },
+        { title: "엘리바바(eleVaVa)", url: "http://elevava.com/", slug: "elevava", participation: 100 },
+        { title: "경기도립노인전문시흥병원", url: "http://www.gshospital.com/", slug: "gshospital", participation: 100 },
+        { title: "서울아산이비인후과", url: "http://www.seoulasan-ent.com/", slug: "seoulasan-ent", participation: 100 },
+        { title: "서남동행 (서울특별시 서남병원 공공의료본부)", url: "https://phs.seoulsnh.or.kr/", slug: "seoulsnh", participation: 100 },
+        { title: "서울대항유외과의원", url: "http://www.seouldhu.surgery/", slug: "seouldhu", participation: 100 },
+        { title: "매듭병원", url: "http://knothospital.com/", slug: "knothospital", participation: 100 },
+        { title: "라팡산부인과의원", url: "http://www.lapin.co.kr/", slug: "lapin", participation: 100 },
+        { title: "더바름정형외과", url: "https://thebareum.com/", slug: "thebareum", participation: 100 },
+        { title: "검단연세이비인후과의원", url: "http://gdysent.co.kr/", slug: "gdysent", participation: 100 },
+        { title: "서울탑안과의원 (청주)", url: "http://topretina.co.kr/", slug: "topretina", participation: 100 },
+        { title: "장튼위튼병원", url: "http://www.good-jang.com/", slug: "good-jang", participation: 100 },
+        { title: "충무로필한의원", url: "http://chungmuro-philhospital.com/", slug: "chungmuro-philhospital", participation: 100 },
+        { title: "청주필한방병원", url: "https://www.cheongju-philhospital.com/", slug: "cheongju-philhospital", participation: 100 },
+        { title: "어니스트여성의원", url: "http://www.honestclinic.com/", slug: "honestclinic", participation: 100 },
+        { title: "서울특별시북부지역장애인보건의료센터", url: "http://www.seoulnhc.com/", slug: "seoulnhc", participation: 100 },
+        { title: "서울재활병원", url: "https://seoulrh.com/", slug: "seoulrh", participation: 100 },
+        { title: "이종신재활의학과의원", url: "http://ljshosp.co.kr/", slug: "ljshosp", participation: 100 },
+        { title: "삼성봄내과의원", url: "http://samsungbom.com/", slug: "samsungbom", participation: 100 },
+        { title: "청주담대항외과의원", url: "http://damdaehang.co.kr/", slug: "damdaehang", participation: 100 },
+        { title: "뉴고려병원", url: "https://www.nkhospital.net/", slug: "nkhospital", participation: 100 }
     ];
+    // 👆 participation 값을 프로젝트별로 원하는 숫자(0~100)로 바꾸면 막대 길이가 그에 맞게 표시됩니다.
+
+    // Prefer a local, pre-downloaded thumbnail (assets/thumbnails/<slug>.jpg) — instant load.
+    // If it doesn't exist yet, fall back to the live mshots screenshot service (slower),
+    // and if that also fails, fall back to a plain icon placeholder.
+    function getLocalThumbUrl(slug) {
+        return `assets/thumbnails/${slug}.jpg`;
+    }
+    function getMshotsUrl(pageUrl) {
+        return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(pageUrl)}?w=600`;
+    }
 
     projects.forEach((item) => {
+        const pct = Math.max(0, Math.min(100, item.participation ?? 100));
         const link = document.createElement('a');
         link.href = item.url;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
         link.className = "group block bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_20px_rgba(26,43,76,0.04)] hover:translate-y-[-4px] transition-all duration-300 border-b-2 border-transparent hover:border-secondary";
         link.innerHTML = `
-            <div class="aspect-video mb-6 overflow-hidden rounded-lg bg-surface-container">
-                <div class="w-full h-full bg-surface-variant/50 animate-pulse flex items-center justify-center">
-                    <iframe 
-						src="${item.url}"
-						class="w-full h-full"
-						loading="lazy">
-					</iframe>
+            <div class="aspect-video mb-6 overflow-hidden rounded-lg bg-surface-container relative">
+                <img
+                    src="${getLocalThumbUrl(item.slug)}"
+                    data-fallback="${getMshotsUrl(item.url)}"
+                    alt="${item.title} 스크린샷"
+                    loading="lazy"
+                    class="w-full h-full object-cover object-top"
+                    onerror="
+                        if (!this.dataset.triedFallback) {
+                            this.dataset.triedFallback = '1';
+                            this.src = this.dataset.fallback;
+                        } else {
+                            this.style.display='none';
+                            this.nextElementSibling.style.display='flex';
+                        }
+                    "
+                />
+                <div class="thumb-fallback w-full h-full items-center justify-center absolute inset-0 bg-surface-variant/50">
+                    <span class="material-symbols-outlined text-outline-variant">image</span>
                 </div>
             </div>
             <div class="mb-4">
@@ -213,10 +239,10 @@
             <div class="mb-0">
                 <div class="flex justify-between font-label-sm text-label-sm mb-2">
                     <span class="text-on-surface-variant">Participation</span>
-                    <span class="text-secondary font-bold">100%</span>
+                    <span class="text-secondary font-bold">${pct}%</span>
                 </div>
                 <div class="participation-bar">
-                    <div class="participation-fill" style="width: 100%;"></div>
+                    <div class="participation-fill" style="width: ${pct}%;"></div>
                 </div>
             </div>
         `;
