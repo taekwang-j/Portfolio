@@ -200,7 +200,11 @@
         link.innerHTML = `
             <div class="aspect-video mb-6 overflow-hidden rounded-lg bg-surface-container">
                 <div class="w-full h-full bg-surface-variant/50 animate-pulse flex items-center justify-center">
-                    <span class="material-symbols-outlined text-outline-variant">image</span>
+                    <iframe 
+						src="${projects.url}"
+						class="w-full h-full"
+						loading="lazy">
+					</iframe>
                 </div>
             </div>
             <div class="mb-4">
