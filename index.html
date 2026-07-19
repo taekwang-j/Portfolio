@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="ko">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@700;800&amp;family=Be+Vietnam+Pro:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;family=Noto+Sans+KR:wght@400;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        try {
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        "colors": {
+                            "surface": "#f8f9ff",
+                            "on-surface-variant": "#44474e",
+                            "on-primary-fixed-variant": "#364669",
+                            "on-primary-container": "#8293ba",
+                            "surface-container-low": "#eff4ff",
+                            "primary-fixed-dim": "#b6c6f0",
+                            "surface-container": "#e5eeff",
+                            "primary-fixed": "#d8e2ff",
+                            "surface-container-highest": "#d9e3f5",
+                            "secondary-fixed": "#dce1ff",
+                            "surface-bright": "#f8f9ff",
+                            "secondary-container": "#0056fd",
+                            "inverse-surface": "#27313f",
+                            "outline": "#75777f",
+                            "inverse-on-surface": "#eaf1ff",
+                            "on-tertiary": "#ffffff",
+                            "secondary-fixed-dim": "#b6c4ff",
+                            "surface-variant": "#d9e3f5",
+                            "error": "#ba1a1a",
+                            "surface-container-high": "#dfe9fb",
+                            "inverse-primary": "#b6c6f0",
+                            "tertiary-container": "#292c2d",
+                            "secondary": "#0042c7",
+                            "on-tertiary-fixed-variant": "#454748",
+                            "on-primary": "#ffffff",
+                            "on-error": "#ffffff",
+                            "on-error-container": "#93000a",
+                            "primary-container": "#1a2b4c",
+                            "on-secondary-container": "#e4e7ff",
+                            "surface-tint": "#4e5e82",
+                            "surface-container-lowest": "#ffffff",
+                            "on-secondary-fixed": "#001550",
+                            "tertiary-fixed": "#e1e3e4",
+                            "on-tertiary-container": "#919394",
+                            "outline-variant": "#c5c6cf",
+                            "surface-dim": "#d0dbed",
+                            "primary": "#031636",
+                            "on-secondary-fixed-variant": "#003ab2",
+                            "tertiary": "#151819",
+                            "on-secondary": "#ffffff",
+                            "on-primary-fixed": "#071b3b",
+                            "on-surface": "#121c29",
+                            "background": "#f8f9ff",
+                            "on-tertiary-fixed": "#191c1d",
+                            "tertiary-fixed-dim": "#c5c7c8",
+                            "on-background": "#121c29"
+                        },
+                        "borderRadius": {
+                            "DEFAULT": "0.5rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                        },
+                        "spacing": {
+                            "gutter": "24px",
+                            "margin-mobile": "20px",
+                            "margin-desktop": "64px",
+                            "container-max": "1200px",
+                            "stack-unit": "8px"
+                        },
+                        "fontFamily": {
+                            "headline-lg-mobile": ["Hanken Grotesk", "Noto Sans KR"],
+                            "body-md": ["Be Vietnam Pro", "Noto Sans KR"],
+                            "label-sm": ["JetBrains Mono"],
+                            "headline-lg": ["Hanken Grotesk", "Noto Sans KR"],
+                            "body-lg": ["Be Vietnam Pro", "Noto Sans KR"],
+                            "headline-md": ["Hanken Grotesk", "Noto Sans KR"],
+                            "display-lg": ["Hanken Grotesk", "Noto Sans KR"]
+                        },
+                        "fontSize": {
+                            "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                            "label-sm": ["13px", {"lineHeight": "1.0", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                            "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                            "body-lg": ["18px", {"lineHeight": "1.7", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                            "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}]
+                        }
+                    },
+                },
+            }
+        } catch (_e) {}
+    </script>
+<style>
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .progress-bar-inner {
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .progress-bar-inner.active {
+            width: var(--progress-width);
+        }
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        #mobile-menu.hidden-menu {
+            transform: translateX(100%);
+        }
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="antialiased bg-background text-on-background" data-mode="connect">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface-bright/90 backdrop-blur-md border-b border-outline-variant/30">
+<div class="max-w-container-max mx-auto w-full flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4">
+<a class="font-headline-md text-headline-md font-bold text-primary" href="#intro">
+            Publisher_Dev
+        </a>
+<!-- Desktop Nav -->
+<nav class="hidden md:flex gap-10 items-center ml-auto">
+<a class="hover:text-secondary transition-colors duration-200 font-body-md text-body-md text-secondary font-bold border-b-2 border-secondary" href="#intro">Intro</a>
+<a class="hover:text-secondary transition-colors duration-200 font-body-md text-body-md text-on-surface-variant" href="#skills">Skills</a>
+<a class="hover:text-secondary transition-colors duration-200 font-body-md text-body-md text-on-surface-variant" href="#projects">Projects</a>
+<a class="text-on-surface-variant hover:text-secondary transition-colors duration-200 font-body-md text-body-md" href="#contact">Contact</a>
+</nav>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden flex items-center p-2 text-primary" id="menu-toggle">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</div>
+</header>
+<!-- Mobile Slide-out Menu -->
+<div class="fixed inset-0 z-[60] bg-surface flex flex-col items-center justify-center gap-8 hidden-menu md:hidden" id="mobile-menu">
+<button class="absolute top-6 right-6 text-primary p-2" id="menu-close">
+<span class="material-symbols-outlined text-4xl">close</span>
+</button>
+<a class="text-headline-lg font-bold text-primary mobile-link" href="#intro">Intro</a>
+<a class="text-headline-lg font-bold text-primary mobile-link" href="#skills">Skills</a>
+<a class="text-headline-lg font-bold text-primary mobile-link" href="#projects">Projects</a>
+<a class="text-headline-lg font-bold text-primary mobile-link" href="#contact">Contact</a>
+</div>
+<main class="">
+<!-- Hero Section -->
+<section class="reveal relative overflow-hidden min-h-[80vh] flex flex-col justify-center items-center text-center px-margin-mobile md:px-margin-desktop py-24 z-10 active" id="intro">
+<canvas id="hero-canvas" width="1280" height="819"></canvas>
+<div class="max-w-4xl mx-auto relative z-10">
+<h1 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-surface-bright mb-8 leading-tight">8년의 정밀함,<br>웹의 가치를 완성하다</h1>
+<p class="font-body-md md:font-body-lg text-body-md md:text-body-lg text-primary-fixed mb-12 max-w-2xl mx-auto">단순한 화면 구성을 넘어, 기술적 우수성과 사용자 중심의 퍼블리싱으로 디지털 경험의 수준을 끌어올립니다. 시니어의 통찰력으로 견고한 웹 아키텍처를 구축합니다.</p>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<a class="bg-secondary text-on-secondary px-10 py-4 rounded-lg font-headline-md text-headline-md active:scale-95 transition-transform inline-block hover:shadow-md" href="#projects">프로젝트 보기</a>
+</div>
+</div>
+</section>
+<!-- Stats Highlight Banner -->
+<section class="reveal bg-primary text-on-primary py-16 relative z-10 active" id="stats-section">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+<div>
+<div class="font-display-lg text-4xl md:text-5xl mb-2"><span class="count-up" data-target="8">8</span>+</div>
+<p class="font-body-md text-primary-fixed">Years of Experience</p>
+</div>
+<div class="border-y md:border-y-0 md:border-x border-primary-container py-8 md:py-0">
+<div class="font-display-lg text-4xl md:text-5xl mb-2 text-secondary-fixed-dim"><span class="count-up" data-target="40">40</span>+</div>
+<p class="font-body-md text-primary-fixed">Projects Delivered</p>
+</div>
+<div class="">
+<div class="font-display-lg text-4xl md:text-5xl mb-2"><span class="count-up" data-target="100">100</span>%</div>
+<p class="font-body-md text-primary-fixed">Accessibility Standards</p>
+</div>
+</div>
+</section>
+<!-- Technical Expertise Section -->
+<section class="reveal py-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto active" id="skills">
+<div class="text-center mb-20">
+<span class="font-label-sm text-label-sm text-secondary bg-secondary-fixed px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">Expertise</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Technical Excellence</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Skill 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg border-l-4 border-secondary shadow-sm hover:shadow-md transition-all duration-300">
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">html</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-md text-headline-md text-primary">HTML5 Semantic</h3>
+<span class="bg-primary-container text-on-primary-container px-2 py-1 rounded text-[11px] font-bold">EXPERT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">웹 접근성(A11y) 표준 준수와 검색 엔진 최적화(SEO)를 최우선으로 하는 견고한 시맨틱 마크업 설계.</p>
+</div>
+<!-- Skill 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg border-l-4 border-secondary shadow-sm hover:shadow-md transition-all duration-300">
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">css</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-md text-headline-md text-primary">Advanced SCSS</h3>
+<span class="bg-primary-container text-on-primary-container px-2 py-1 rounded text-[11px] font-bold">EXPERT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">믹스인 남발 없이 논리적인 구조 설계와 효율적인 코드 작성을 통한 유지보수가 용이한 스타일링 시스템 구축.</p>
+</div>
+<!-- Skill 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg border-l-4 border-secondary shadow-sm hover:shadow-md transition-all duration-300">
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">javascript</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-md text-headline-md text-primary">JavaScript &amp; jQuery</h3>
+<span class="bg-primary-container text-on-primary-container px-2 py-1 rounded text-[11px] font-bold">EXPERT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">jQuery를 활용한 효율적인 DOM 조작 및 복잡한 JavaScript 로직의 유지보수와 디버깅 수행.</p>
+</div>
+<!-- Skill 4 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg border-l-4 border-secondary shadow-sm hover:shadow-md transition-all duration-300">
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">accessibility</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-md text-headline-md text-primary">Web Accessibility</h3>
+<span class="bg-primary-container text-on-primary-container px-2 py-1 rounded text-[11px] font-bold">EXPERT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">장애인과 고령자를 포함한 모든 사용자가 차별 없이 정보를 얻을 수 있는 포괄적인 디지털 환경을 보장합니다.</p>
+</div>
+<!-- Skill 5 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg border-l-4 border-secondary shadow-sm hover:shadow-md transition-all duration-300">
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">speed</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-md text-headline-md text-primary">Performance Tuning</h3>
+<span class="bg-primary-container text-on-primary-container px-2 py-1 rounded text-[11px] font-bold">EXPERT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">초기 로딩 속도 최적화, 렌더링 성능 개선 및 리소스 경량화 최적화 작업.</p>
+</div>
+<!-- Skill 6 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg border-l-4 border-secondary shadow-sm hover:shadow-md transition-all duration-300">
+<div class="mb-6">
+<span class="material-symbols-outlined text-secondary text-4xl">psychology</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<h3 class="font-headline-md text-headline-md text-primary">AI-Driven Workflow</h3>
+<span class="bg-primary-container text-on-primary-container px-2 py-1 rounded text-[11px] font-bold">EXPERT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">AI 도구를 활용한 개발 속도 가속화, 코드 최적화 및 UI/UX 품질 향상.</p>
+</div>
+</div>
+</section>
+<!-- Selected Projects Section -->
+<section class="reveal py-32 bg-surface-container-low active" id="projects">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div>
+<span class="font-label-sm text-label-sm text-secondary bg-secondary-fixed px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">Work</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Selected Projects</h2>
+<p class="mt-4 text-on-surface-variant font-body-md max-w-xl">지난 8년간 40여 개 이상의 프로젝트를 수행하며 다져진 실무 능력으로 웹 표준을 정립해 왔습니다.</p>
+</div>
+<a class="text-secondary font-bold flex items-center gap-2 group" href="#projects">
+                    모든 프로젝트 보기
+                    <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Project 1 (0%) -->
+<div class="project-card group cursor-pointer">
+<div class="relative overflow-hidden rounded-xl mb-8 aspect-video shadow-md bg-surface-variant">
+<img alt="Global News Matrix" class="project-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5exIOiavf70jxMVtCcA-pIawjuTXdmCF-_-eG4A2IHshyOVN420uBNZLZ-73XCyzac3MhPnG_H1pe42oWquO1jsn55CJzdbTBVIQ0f5m-cR7JjI0G0P8Z686VjdNUclth_OjE0LVxtI9XwIoKMq8djRQD7DwSDVH0mb_SA7FtTKAqb9igm_uZB5iMqoA1_HkF4Nx7z79m-XMLexSMv5PK9SxTfq8WO73AL8-X4Z6wWLuhPnvMRdEZGg">
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">Global News Matrix</h3>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-sm text-on-surface-variant">참여도</span>
+<span class="font-label-sm text-secondary font-bold">0%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="progress-bar-inner bg-secondary h-2 rounded-full active" style="--progress-width: 0%"></div>
+</div>
+</div>
+<a class="text-secondary font-bold flex items-center gap-2" href="#">View Case Study<span class="material-symbols-outlined text-sm">north_east</span></a>
+</div>
+<!-- Project 2 (25%) -->
+<div class="project-card group cursor-pointer">
+<div class="relative overflow-hidden rounded-xl mb-8 aspect-video shadow-md bg-surface-variant">
+<img alt="DataGrid Platform" class="project-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK7v0tTk9mySjekvKGX56yMcLIPyfSa2FVydD3juHF0PYbPiY0qWcoFPzaY2N5Chc2T8UvwrtieKilfXYrHV47-NU4ezmxI2EgsULs3AmFR_yvc2gDbd2gzWeduriP3gLx4PnwaN7Yl4duz29ayVAxB7xRapv4KF3U6jNgeG7DN3OJ_7APEp4OmbQNkk56skkl9ljXVo7Itq9KhBvFIDpglcf56Jopyuk8mpFAILDO3H959zc_vk_1ow">
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">DataGrid Platform</h3>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-sm text-on-surface-variant">참여도</span>
+<span class="font-label-sm text-secondary font-bold">25%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="progress-bar-inner bg-secondary h-2 rounded-full active" style="--progress-width: 25%"></div>
+</div>
+</div>
+<a class="text-secondary font-bold flex items-center gap-2" href="#">View Case Study<span class="material-symbols-outlined text-sm">north_east</span></a>
+</div>
+<!-- Project 3 (50%) -->
+<div class="project-card group cursor-pointer">
+<div class="relative overflow-hidden rounded-xl mb-8 aspect-video shadow-md bg-surface-variant">
+<img alt="Smart Logistics" class="project-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5exIOiavf70jxMVtCcA-pIawjuTXdmCF-_-eG4A2IHshyOVN420uBNZLZ-73XCyzac3MhPnG_H1pe42oWquO1jsn55CJzdbTBVIQ0f5m-cR7JjI0G0P8Z686VjdNUclth_OjE0LVxtI9XwIoKMq8djRQD7DwSDVH0mb_SA7FtTKAqb9igm_uZB5iMqoA1_HkF4Nx7z79m-XMLexSMv5PK9SxTfq8WO73AL8-X4Z6wWLuhPnvMRdEZGg">
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">Smart Logistics</h3>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-sm text-on-surface-variant">참여도</span>
+<span class="font-label-sm text-secondary font-bold">50%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="progress-bar-inner bg-secondary h-2 rounded-full active" style="--progress-width: 50%"></div>
+</div>
+</div>
+<a class="text-secondary font-bold flex items-center gap-2" href="#">View Case Study<span class="material-symbols-outlined text-sm">north_east</span></a>
+</div>
+<!-- Project 4 (75%) -->
+<div class="project-card group cursor-pointer">
+<div class="relative overflow-hidden rounded-xl mb-8 aspect-video shadow-md bg-surface-variant">
+<img alt="E-Commerce Core" class="project-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK7v0tTk9mySjekvKGX56yMcLIPyfSa2FVydD3juHF0PYbPiY0qWcoFPzaY2N5Chc2T8UvwrtieKilfXYrHV47-NU4ezmxI2EgsULs3AmFR_yvc2gDbd2gzWeduriP3gLx4PnwaN7Yl4duz29ayVAxB7xRapv4KF3U6jNgeG7DN3OJ_7APEp4OmbQNkk56skkl9ljXVo7Itq9KhBvFIDpglcf56Jopyuk8mpFAILDO3H959zc_vk_1ow">
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">E-Commerce Core</h3>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-sm text-on-surface-variant">참여도</span>
+<span class="font-label-sm text-secondary font-bold">75%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="progress-bar-inner bg-secondary h-2 rounded-full active" style="--progress-width: 75%"></div>
+</div>
+</div>
+<a class="text-secondary font-bold flex items-center gap-2" href="#">View Case Study<span class="material-symbols-outlined text-sm">north_east</span></a>
+</div>
+<!-- Project 5 (100%) -->
+<div class="project-card group cursor-pointer">
+<div class="relative overflow-hidden rounded-xl mb-8 aspect-video shadow-md bg-surface-variant">
+<img alt="Fintech Dashboard" class="project-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5exIOiavf70jxMVtCcA-pIawjuTXdmCF-_-eG4A2IHshyOVN420uBNZLZ-73XCyzac3MhPnG_H1pe42oWquO1jsn55CJzdbTBVIQ0f5m-cR7JjI0G0P8Z686VjdNUclth_OjE0LVxtI9XwIoKMq8djRQD7DwSDVH0mb_SA7FtTKAqb9igm_uZB5iMqoA1_HkF4Nx7z79m-XMLexSMv5PK9SxTfq8WO73AL8-X4Z6wWLuhPnvMRdEZGg">
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">Fintech Dashboard</h3>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-sm text-on-surface-variant">참여도</span>
+<span class="font-label-sm text-secondary font-bold">100%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="progress-bar-inner bg-secondary h-2 rounded-full active" style="--progress-width: 100%"></div>
+</div>
+</div>
+<a class="text-secondary font-bold flex items-center gap-2" href="#">View Case Study<span class="material-symbols-outlined text-sm">north_east</span></a>
+</div>
+<!-- Project 6 (100%) -->
+<div class="project-card group cursor-pointer">
+<div class="relative overflow-hidden rounded-xl mb-8 aspect-video shadow-md bg-surface-variant">
+<img alt="Admin Portal" class="project-image w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK7v0tTk9mySjekvKGX56yMcLIPyfSa2FVydD3juHF0PYbPiY0qWcoFPzaY2N5Chc2T8UvwrtieKilfXYrHV47-NU4ezmxI2EgsULs3AmFR_yvc2gDbd2gzWeduriP3gLx4PnwaN7Yl4duz29ayVAxB7xRapv4KF3U6jNgeG7DN3OJ_7APEp4OmbQNkk56skkl9ljXVo7Itq9KhBvFIDpglcf56Jopyuk8mpFAILDO3H959zc_vk_1ow">
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-3">Admin Portal</h3>
+<div class="mb-6">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-sm text-on-surface-variant">참여도</span>
+<span class="font-label-sm text-secondary font-bold">100%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2">
+<div class="progress-bar-inner bg-secondary h-2 rounded-full active" style="--progress-width: 100%"></div>
+</div>
+</div>
+<a class="text-secondary font-bold flex items-center gap-2" href="#">View Case Study<span class="material-symbols-outlined text-sm">north_east</span></a>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact/CTA Section -->
+<section class="reveal py-32 bg-primary-container active" id="contact">
+<div class="max-w-4xl mx-auto px-margin-mobile text-center">
+<h2 class="font-display-lg text-display-lg text-surface-bright mb-8">Start a Conversation</h2>
+<p class="font-body-md md:font-body-lg text-body-md md:text-body-lg text-on-primary-container mb-12">
+                새로운 프로젝트, 협업 기회 혹은 기술적인 논의가 필요하시다면 언제든 환영합니다.<br>시니어 퍼블리셔의 시각으로 귀사의 가치를 더해드립니다.
+            </p>
+<div class="flex flex-col gap-8 justify-center items-center">
+<a class="bg-secondary text-on-secondary px-12 py-5 rounded-lg font-headline-md text-headline-md hover:scale-105 transition-transform inline-block" href="mailto:your-email@example.com">
+                    이메일 보내기
+                </a>
+<div class="flex gap-6">
+<a aria-label="Tistory Blog" class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-low text-primary hover:bg-secondary hover:text-on-secondary transition-all" href="#">
+<span class="tistory-icon text-xl leading-none font-bold">T</span>
+</a>
+<a aria-label="YouTube" class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-low text-primary hover:bg-secondary hover:text-on-secondary transition-all" href="#">
+<span class="material-symbols-outlined">smart_display</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-16 border-t border-outline-variant bg-surface-container flex flex-col md:flex-row justify-between items-center px-6 md:px-12">
+<div class="mb-8 md:mb-0">
+<a class="font-headline-md text-headline-md font-bold text-primary mb-2 block" href="#intro">Publisher_Dev</a>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 Publisher_Dev. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a aria-label="Tistory Blog" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="tistory-icon font-extrabold">T</span>
+<span class="font-body-md text-body-md">Blog</span>
+</a>
+<a aria-label="YouTube" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined">smart_display</span>
+<span class="font-body-md text-body-md">YouTube</span>
+</a>
+<a aria-label="Email" class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1" href="mailto:your-email@example.com">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-body-md text-body-md">Email</span>
+</a>
+</div>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- WebGL Shader Animation (ANIMATION_18) ---
+        const canvas = document.getElementById('hero-canvas');
+        const gl = canvas.getContext('webgl');
+
+        if (gl) {
+            const vertexShaderSource = `
+                attribute vec2 position;
+                varying vec2 v_texCoord;
+                void main() {
+                    v_texCoord = position * 0.5 + 0.5;
+                    v_texCoord.y = 1.0 - v_texCoord.y;
+                    gl_Position = vec4(position, 0.0, 1.0);
+                }
+            `;
+            const fragmentShaderSource = `
+                precision highp float;
+                varying vec2 v_texCoord;
+                uniform float u_time;
+                uniform vec2 u_resolution;
+
+                void main() {
+                    vec2 uv = v_texCoord;
+                    float time = u_time * 0.2;
+                    
+                    vec3 color1 = vec3(0.06, 0.11, 0.20); 
+                    vec3 color2 = vec3(0.10, 0.17, 0.30); 
+                    
+                    float noise = sin(uv.x * 3.0 + time) * cos(uv.y * 2.0 - time) * 0.5 + 0.5;
+                    noise += sin(uv.y * 4.0 + time * 1.5) * 0.2;
+                    
+                    vec3 finalColor = mix(color1, color2, noise * 0.3);
+                    
+                    float streak = pow(1.0 - abs(uv.y - 0.5 + sin(uv.x * 2.0 + time) * 0.1), 20.0);
+                    finalColor += streak * 0.05;
+                    
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            function createShader(gl, type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                return shader;
+            }
+
+            const program = gl.createProgram();
+            gl.attachShader(program, createShader(gl, gl.VERTEX_SHADER, vertexShaderSource));
+            gl.attachShader(program, createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource));
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+
+            const positionLocation = gl.getAttribLocation(program, "position");
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            const timeLocation = gl.getUniformLocation(program, "u_time");
+            const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+
+            function render(time) {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+                gl.uniform1f(timeLocation, time * 0.001);
+                gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                requestAnimationFrame(render);
+            }
+            requestAnimationFrame(render);
+        }
+
+        // --- Count-up Animation ---
+        const countUp = (el) => {
+            const target = parseInt(el.getAttribute('data-target'));
+            let current = 0;
+            const duration = 1500;
+            const stepTime = 10;
+            const increment = target / (duration / stepTime);
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    el.innerText = target;
+                    clearInterval(timer);
+                } else {
+                    el.innerText = Math.floor(current);
+                }
+            }, stepTime);
+        };
+
+        const statsSection = document.getElementById('stats-section');
+        const countObservers = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.count-up').forEach(el => countUp(el));
+                    countObservers.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        if (statsSection) countObservers.observe(statsSection);
+
+        // --- Mobile Menu Logic ---
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        const toggleMenu = () => {
+            mobileMenu.classList.toggle('hidden-menu');
+            document.body.classList.toggle('overflow-hidden');
+        };
+
+        menuToggle.addEventListener('click', toggleMenu);
+        menuClose.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden-menu');
+            document.body.classList.remove('overflow-hidden');
+        }));
+
+        // --- Existing reveal logic ---
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.15 });
+        reveals.forEach(reveal => revealObserver.observe(reveal));
+
+        const progressBars = document.querySelectorAll('.progress-bar-inner');
+        const progressObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+        progressBars.forEach(bar => progressObserver.observe(bar));
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        window.scrollTo({
+                            top: target.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Header active state
+        const navLinks = document.querySelectorAll('nav a');
+        const sections = document.querySelectorAll('section[id]');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('text-secondary', 'font-bold', 'border-b-2', 'border-secondary');
+                link.classList.add('text-on-surface-variant');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.remove('text-on-surface-variant');
+                    link.classList.add('text-secondary', 'font-bold', 'border-b-2', 'border-secondary');
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+</body></html>
